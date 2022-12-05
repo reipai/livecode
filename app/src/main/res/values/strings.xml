@@ -4,4 +4,15 @@
     <string name="register">Register</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="id">ID: 1</string>
+    <string name="name">Name: Theo</string>
+    <string name="email_dummy">Email: reivai59@gmail.com</string>
+
+    <string name="name_error">Masukkan nama Anda</string>
+    <string name="email_error">Masukkan email Anda</string>
+    <string name="email_validator">Masukkan email yang valid</string>
+    <string name="password_error">Masukkan password Anda</string>
+
+    <string name="error_getuser">Kesalahan data</string>
+    <string name="contact">Contact</string>
 </resources>

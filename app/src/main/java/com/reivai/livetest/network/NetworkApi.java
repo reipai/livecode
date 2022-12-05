@@ -3,6 +3,8 @@ package com.reivai.livetest.network;
 import android.content.Context;
 import android.os.SystemClock;
 
+import androidx.viewbinding.BuildConfig;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -17,30 +19,34 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetworkApi {
 
-    public static NetworkInterface getNetworkInterface(Context context) {
+    public static NetworkInterface getNetworkClient(Context context) {
         Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setLenient().create();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://reqres.in/api")
-                .client(getclient())
+                .baseUrl("https://reqres.in")
+                .client(getClient())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-
         return retrofit.create(NetworkInterface.class);
     }
 
-    public static OkHttpClient getclient() {
-        Interceptor interceptor = chain -> {
-            SystemClock.sleep(1000);
-            return chain.proceed(chain.request());
-        };
-
+    public static OkHttpClient getClient() {
         return new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(1, TimeUnit.MINUTES)
-                .writeTimeout(1, TimeUnit.MINUTES)
-                .addInterceptor(new HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT))
-                .addNetworkInterceptor(interceptor)
+                .addInterceptor(getLoggingeInterceptor())
                 .build();
+    }
+
+    public static HttpLoggingInterceptor.Level getInterceptorLevel() {
+        if (BuildConfig.DEBUG) {
+            return HttpLoggingInterceptor.Level.BODY;
+        } else {
+            return HttpLoggingInterceptor.Level.NONE;
+        }
+    }
+
+    public static HttpLoggingInterceptor getLoggingeInterceptor() {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(getInterceptorLevel());
+        return loggingInterceptor;
     }
 }
